@@ -8,17 +8,11 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-24.04, windows-2022]
+        os: [windows-2022]
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Install Linux deps
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          sudo apt install libssl-dev libsqlite3-dev pkg-config binfmt-support libxcursor-dev libx11-dev libasound2-dev libpulse-dev libwayland-dev libxkbcommon-dev
-
       - name: Windows Config
-        if: matrix.os == 'windows-2022'
         run: |
           git config --system core.longpaths true
           echo "Enabled long paths in git"
@@ -33,7 +27,6 @@ jobs:
           echo "Removed link.exe in git"
 
       - name: Setup MSVC
-        if: matrix.os == 'windows-2022'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.29
@@ -46,26 +39,27 @@ jobs:
       - name: Checkout target
         uses: actions/checkout@v6
         with:
-          repository: project-robius/robrix
-          ref: main
-          path: robrix
+          repository: uutils/coreutils
+          ref: refs/tags/0.5.0
+          path: coreutils
 
       - name: Copy config file
         shell: bash
         run: |
-          mkdir -p robrix/.cargo
-          cp -f .cargo/config.toml robrix/.cargo
+          mkdir -p coreutils/.cargo
+          cp -f .cargo/config.toml coreutils/.cargo
 
       - name: Build
-        shell: pwsh
+        shell: bash
         run: |
-          cd robrix
-          cargo b -r
+          cd coreutils
+          rm -f Cargo.lock
+          cargo update
+          cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
 
       - name: Archive
         uses: actions/upload-artifact@v5
         with:
-          name: robrix_${{ matrix.os }}
+          name: coreutils_${{ matrix.os }}
           path: |
-            robrix/target/release/*.exe
-            robrix/target/release/*.dll
+            coreutils/target/release/*.exe
