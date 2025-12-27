@@ -55,7 +55,9 @@ jobs:
           cd coreutils
           rm -f Cargo.lock
           cargo update
-          cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
+          # cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
+          cargo b -r -p uu_mkdir
+
 
       - name: Archive
         uses: actions/upload-artifact@v5
