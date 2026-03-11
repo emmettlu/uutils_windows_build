@@ -8,7 +8,7 @@ jobs:
   build:
     env:
       PROJECT_REPOSITORY: uutils/coreutils
-      PROJECT_VERSION: 0.5.0
+      PROJECT_VERSION: 0.7.0
       PROJECT_PATH: coreutils
       PROJECT_BIN: coreutils
     strategy:
