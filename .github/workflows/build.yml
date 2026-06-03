@@ -8,7 +8,7 @@ jobs:
   build:
     env:
       PROJECT_REPOSITORY: uutils/coreutils
-      PROJECT_VERSION: 0.8.0
+      PROJECT_VERSION: 0.9.0
       PROJECT_PATH: coreutils
       PROJECT_BIN: coreutils
     strategy:
@@ -64,7 +64,7 @@ jobs:
           cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
 
       - name: Archive
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: coreutils_${{ runner.os }}
           path: |
