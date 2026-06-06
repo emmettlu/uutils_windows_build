@@ -10,8 +10,8 @@ jobs:
     env:
       PROJECT_REPOSITORY: uutils/findutils
       PROJECT_VERSION: 0.8.0
-      PROJECT_PATH: coreutils
-      PROJECT_BIN: coreutils
+      PROJECT_PATH: findutils
+      PROJECT_BIN: findutils
 
     steps:
       - name: Windows Config

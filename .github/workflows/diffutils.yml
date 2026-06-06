@@ -10,8 +10,8 @@ jobs:
     env:
       PROJECT_REPOSITORY: uutils/diffutils
       PROJECT_VERSION: v0.5.0
-      PROJECT_PATH: coreutils
-      PROJECT_BIN: coreutils
+      PROJECT_PATH: diffutils
+      PROJECT_BIN: diffutils
 
     steps:
       - name: Windows Config
