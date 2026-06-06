@@ -1,0 +1,70 @@
+name: diffutils
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    env:
+      PROJECT_REPOSITORY: uutils/diffutils
+      PROJECT_VERSION: v0.5.0
+      PROJECT_PATH: coreutils
+      PROJECT_BIN: coreutils
+
+    steps:
+      - name: Windows Config
+        run: |
+          git config --system core.longpaths true
+          echo "Enabled long paths in git"
+
+          New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+          echo "Enabled long paths in registry"
+
+          $git_link = "C:\Program Files\Git\usr\bin\link.exe"
+          if (Test-Path $git_link) {
+              Rename-Item $git_link "_link.exe"
+          }
+          echo "Removed link.exe in git"
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: 14.29
+          arch: x64
+          sdk: 10.0.19041.0
+
+      - name: Checkout self
+        uses: actions/checkout@v6
+
+      - name: Checkout target
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.PROJECT_REPOSITORY }}
+          ref: refs/tags/${{ env.PROJECT_VERSION }}
+          path: ${{ env.PROJECT_PATH }}
+
+      - name: Copy config file
+        working-directory: ${{ env.PROJECT_PATH }}
+        shell: bash
+        run: |
+          mkdir -p .cargo
+          cp -f ../.cargo/config.toml .cargo
+
+      - name: Build
+        working-directory: ${{ env.PROJECT_PATH }}
+        shell: bash
+        run: |
+          rm -f Cargo.lock
+          cargo update
+          cargo b -r
+
+      - name: Archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: coreutils_${{ runner.os }}
+          path: |
+            ${{ env.PROJECT_PATH }}/target/release/*.dll
+
+            ${{ env.PROJECT_PATH }}/target/release/${{ env.PROJECT_BIN }}.exe

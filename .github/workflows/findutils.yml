@@ -1,4 +1,4 @@
-name: Build
+name: findutils
 
 on:
   push:
@@ -6,15 +6,12 @@ on:
 
 jobs:
   build:
+    runs-on: windows-2022
     env:
-      PROJECT_REPOSITORY: uutils/coreutils
-      PROJECT_VERSION: 0.9.0
+      PROJECT_REPOSITORY: uutils/findutils
+      PROJECT_VERSION: 0.8.0
       PROJECT_PATH: coreutils
       PROJECT_BIN: coreutils
-    strategy:
-      matrix:
-        os: [windows-2022]
-    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Windows Config
@@ -44,9 +41,9 @@ jobs:
       - name: Checkout target
         uses: actions/checkout@v6
         with:
-          repository: uutils/coreutils
+          repository: ${{ env.PROJECT_REPOSITORY }}
           ref: refs/tags/${{ env.PROJECT_VERSION }}
-          path: coreutils
+          path: ${{ env.PROJECT_PATH }}
 
       - name: Copy config file
         working-directory: ${{ env.PROJECT_PATH }}
@@ -61,7 +58,7 @@ jobs:
         run: |
           rm -f Cargo.lock
           cargo update
-          cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
+          cargo b -r
 
       - name: Archive
         uses: actions/upload-artifact@v6
