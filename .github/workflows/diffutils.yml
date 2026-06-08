@@ -2,6 +2,8 @@ name: diffutils
 
 on:
   push:
+    paths:
+      - .github/workflows/diffutils.yml
   workflow_dispatch:
 
 jobs:

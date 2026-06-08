@@ -2,6 +2,8 @@ name: coreutils
 
 on:
   push:
+    paths:
+      - .github/workflows/coreutils.yml
   workflow_dispatch:
 
 jobs:
