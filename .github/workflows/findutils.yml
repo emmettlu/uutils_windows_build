@@ -67,4 +67,4 @@ jobs:
           path: |
             ${{ env.PROJECT_PATH }}/target/release/*.dll
 
-            ${{ env.PROJECT_PATH }}/target/release/${{ env.PROJECT_BIN }}.exe
+            ${{ env.PROJECT_PATH }}/target/release/*.exe
