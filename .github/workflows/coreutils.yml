@@ -60,7 +60,7 @@ jobs:
         run: |
           rm -f Cargo.lock
           cargo update
-          cargo b -r --no-default-features --features "cat cp ln ls mkdir mv rm touch yes"
+          cargo b -r --no-default-features --features "cat cp head ln ls mkdir mv rm tail touch yes"
 
       - name: Archive
         uses: actions/upload-artifact@v6
